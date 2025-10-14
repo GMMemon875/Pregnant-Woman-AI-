@@ -12,9 +12,11 @@
   "description": "",
   "dependencies": {
     "@tavily/core": "^0.5.11",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "groq-sdk": "^0.30.0",
+    "node-cache": "^5.1.2",
     "nodemo": "^1.0.0",
     "nodemon": "^3.1.10"
   }
