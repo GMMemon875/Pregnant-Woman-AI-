@@ -1,3 +1,5 @@
+globalThis.caches = undefined;
+
 import Groq from "groq-sdk";
 import dotenv from "dotenv";
 import { tavily } from "@tavily/core";
@@ -9,8 +11,8 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 const myCache = new NodeCache({ stdTTL: 60 * 60 * 24 }); // Cache for 1 hour
 
-export async function genrate(userMessage) {
-  const messages = [
+export async function genrate(userMessage, threadid) {
+  const basemessages = [
     {
       role: "system",
       content: `
@@ -91,6 +93,7 @@ It’s used in geometry, construction, and design to find distances accurately.
 `,
     },
   ];
+  const messages = myCache.get(threadid) ?? basemessages;
 
   messages.push({
     role: "user",
@@ -129,7 +132,8 @@ It’s used in geometry, construction, and design to find distances accurately.
     const toolcall = res.choices[0].message.tool_calls;
 
     if (!toolcall) {
-      console.log(res.choices[0].message.content);
+      myCache.set(threadid, messages);
+      console.log(myCache);
       return res.choices[0].message.content;
     }
 
